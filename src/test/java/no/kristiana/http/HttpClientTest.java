@@ -22,7 +22,7 @@ public class HttpClientTest {
     @Test
     void shouldReturnResponseHeaders() throws IOException {
         HttpClient client = new HttpClient("urlecho.appspot.com", 80, "/echo?body=Kristiania");
-        assertEquals("10", client.getResponseHeader("Content-Length"));
+        assertEquals("Kristiania", client.getResponseBody());
     }
 
 }

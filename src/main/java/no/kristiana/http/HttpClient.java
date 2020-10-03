@@ -2,10 +2,14 @@ package no.kristiana.http;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HttpClient {
 
     private final int statusCode;
+    private final Map<String, String> responseHeaders = new HashMap<>();
+    private String responseBody;
 
     public HttpClient(final String hostname, int port, final String requestTarget) throws IOException {
         Socket socket = new Socket(hostname, port);
@@ -16,10 +20,7 @@ public class HttpClient {
 
         socket.getOutputStream().write(request.getBytes());
 
-        String line = readLine(socket);
-        System.out.print(line);
-
-       String[] responseLineParts =  line.split(" ");
+        String[] responseLineParts = readLine(socket).split(" ");
 
         statusCode = Integer.parseInt(responseLineParts[1]);
 
@@ -27,24 +28,34 @@ public class HttpClient {
         while (!(headerLine = readLine(socket)).isEmpty()){
             int colonPos = headerLine.indexOf(':');
             String headerName = headerLine.substring(0, colonPos);
-            String headerValue = headerLine.substring(colonPos+1);
+            String headerValue = headerLine.substring(colonPos+1).trim();
+            responseHeaders.put(headerName,headerValue);
         }
+
+        int contentLength = Integer.parseInt(getResponseHeader("Content-Length"));
+        StringBuffer body = new StringBuffer();
+        for(int i = 0; i < contentLength; i++) {
+            body.append((char)socket.getInputStream().read());
+        }
+        responseBody = body.toString();
     }
 
-    private String readLine(Socket socket) throws IOException {
+    public static String readLine(Socket socket) throws IOException {
         StringBuilder line = new StringBuilder();
-
         int c;
-
         while ((c =socket.getInputStream().read()) != -1 ){
-            if (c == '\n') break;
+            if (c == '\r'){
+                socket.getInputStream().read(); // read and ignore the following \n
+                break;
+            }
             line.append((char)c);
         }
         return line.toString();
     }
 
     public static void main(String [] args) throws IOException {
-            new HttpClient("urlecho.appspot.com", 80, "/echo?status=404&Content-Type=text%2Fhtml&body=HeiKristiana");
+        HttpClient client = new HttpClient("urlecho.appspot.com", 80, "/echo?status=404&Content-Type=text%2Fhtml&body=Hei+Kristiana");
+        System.out.println(client.getResponseBody());
     }
 
     public int getStatusCode() {
@@ -53,6 +64,10 @@ public class HttpClient {
 
 
     public String getResponseHeader(String headerName) {
-        return null;
+        return responseHeaders.get(headerName);
+    }
+
+    public String getResponseBody() {
+        return responseBody;
     }
 }
