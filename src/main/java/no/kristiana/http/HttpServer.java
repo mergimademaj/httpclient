@@ -34,7 +34,7 @@ public class HttpServer {
 
         String requestTarget = requestLine.split("")[1];
         String statusCode = "200";
-        int contentLength = 23;
+        String body = "Bahast\nMergim\nKean\nKnut";
 
 
         int questionPos = requestTarget.indexOf('?');
@@ -45,25 +45,16 @@ public class HttpServer {
                 statusCode = queryString.getParameter("status");
             }
             if(queryString.getParameter("body") != null ){
-                contentLength = queryString.getParameter("body").length();
+                body = queryString.getParameter("body");
             }
-
-
-
-
-           /* int equalPos = queryString.indexOf('=');
-            String parameterName = queryString.substring(0,equalPos);
-            String parameterValue = queryString.substring(questionPos+1); Dette kan slettes */
-
-
         }
 
 
         String response = "HTTP/1.1" + statusCode + "OK\r\n" +
-                "Content-Length: " + contentLength + "\r\n" +
+                "Content-Length: " + body.length() + "\r\n" +
                 "Content-Type: text/plain\r\n" +
                 "\r\n" +
-                "Bahast\nMergim\nKean\nKnut";
+                body;
 
         clientSocket.getOutputStream().write(response.getBytes());
     }
