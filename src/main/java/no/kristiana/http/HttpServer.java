@@ -1,10 +1,13 @@
 package no.kristiana.http;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class HttpServer {
+
+    private File contentRoot;
 
     //      Et eller annet problem her som jeg tror påvirker testen:
     public HttpServer(int port) throws IOException {
@@ -61,5 +64,9 @@ public class HttpServer {
 
     public static void main(String [] args) throws IOException {
     new HttpServer(8080);
+    }
+
+    public void setContentRoot(File contentRoot) {
+        this.contentRoot = contentRoot;
     }
 }
