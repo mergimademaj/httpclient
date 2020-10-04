@@ -1,6 +1,7 @@
 package no.kristiana.http;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -40,6 +41,7 @@ public class HttpServer {
         String body = "Bahast\nMergim\nKean\nKnut";
 
 
+
         int questionPos = requestTarget.indexOf('?');
         if (questionPos != -1){
 
@@ -50,20 +52,23 @@ public class HttpServer {
             if(queryString.getParameter("body") != null ){
                 body = queryString.getParameter("body");
             }
+        } else {
+            File file = new File(contentRoot, requestTarget);
+            statusCode = "200";
+            String response = "HTTP/1.1" + statusCode + "OK\r\n" +
+                    "Content-Length: " + body.length() + "\r\n" +
+                    "Content-Type: text/plain\r\n" +
+                    "\r\n" +
+                    body;
+            clientSocket.getOutputStream().write(response.getBytes());
+
+            new FileInputStream(file).transferTo(clientSocket.getOutputStream());
         }
-
-
-        String response = "HTTP/1.1" + statusCode + "OK\r\n" +
-                "Content-Length: " + body.length() + "\r\n" +
-                "Content-Type: text/plain\r\n" +
-                "\r\n" +
-                body;
-
-        clientSocket.getOutputStream().write(response.getBytes());
     }
 
     public static void main(String [] args) throws IOException {
-    new HttpServer(8080);
+    HttpServer server = new HttpServer(8080);
+    server.setContentRoot(new File("src/main/resources"));
     }
 
     public void setContentRoot(File contentRoot) {
