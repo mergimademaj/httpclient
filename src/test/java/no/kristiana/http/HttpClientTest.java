@@ -22,6 +22,12 @@ public class HttpClientTest {
     @Test
     void shouldReturnResponseHeaders() throws IOException {
         HttpClient client = new HttpClient("urlecho.appspot.com", 80, "/echo?body=Kristiania");
+        assertEquals("10", client.getResponseHeader("Content-Length"));
+    }
+
+    @Test
+    void shouldReturnResponseBody() throws IOException {
+        HttpClient client = new HttpClient("urlecho.appspot.com", 80, "/echo?body=Kristiania");
         assertEquals("Kristiania", client.getResponseBody());
     }
 
