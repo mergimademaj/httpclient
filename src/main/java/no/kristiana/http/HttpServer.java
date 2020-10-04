@@ -6,13 +6,15 @@ import java.net.Socket;
 
 public class HttpServer {
 
+    //      Et eller annet problem her som jeg tror påvirker testen:
     public HttpServer(int port) throws IOException {
         ServerSocket serverSocket = new ServerSocket(port);
 
         new Thread(() -> {
             while (true) {
                 try {
-                    handleRequest(serverSocket.accept());
+                    Socket clientSocket = serverSocket.accept();
+                    handleRequest(clientSocket);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -20,11 +22,12 @@ public class HttpServer {
         }).start();
 
         while (true) {
-            handleRequest(serverSocket.accept());
-        }
+
+                Socket clientSocket = serverSocket.accept();
+            }
 
     }
-
+//-------------------------------------------------------------------
     private void handleRequest(Socket clientSocket) throws IOException {
         String requestLine = HttpClient.readLine(clientSocket);
         System.out.println(requestLine);
@@ -34,11 +37,17 @@ public class HttpServer {
 
         int questionPos = requestTarget.indexOf('?');
         if (questionPos != -1){
-            String queryString = requestTarget.substring(questionPos+1);
-            int equalPos = queryString.indexOf('=');
+
+            QueryString queryString =  new QueryString(requestTarget.substring(questionPos+1));
+            statusCode = queryString.getParameter("status");
+
+
+
+           /* int equalPos = queryString.indexOf('=');
             String parameterName = queryString.substring(0,equalPos);
-            String parameterValue = queryString.substring(questionPos+1);
-            statusCode = parameterValue;
+            String parameterValue = queryString.substring(questionPos+1); Dette kan slettes */
+
+
         }
 
         String response = "HTTP/1.1" + statusCode + "OK\r\n" +

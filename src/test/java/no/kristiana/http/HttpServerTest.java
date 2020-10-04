@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/*class HttpServerTest {
+class HttpServerTest {
 
     @Test
     void shouldReturnSuccessfulStatusCode() throws IOException {
@@ -22,5 +22,11 @@ import static org.junit.jupiter.api.Assertions.*;
         assertEquals(404, client.getStatusCode());
     }
 
+    @Test
+    void shouldReturnContentLength() throws IOException {
+        new HttpServer(10003);
+        HttpClient client = new HttpClient("localhost", 10003, "/echo?body=HelloWorld");
+        assertEquals("10", client.getResponseHeader("Content-Length"));
+    }
+
 }
-*/
