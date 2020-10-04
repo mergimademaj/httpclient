@@ -5,10 +5,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class HttpServer {
 
     private File contentRoot;
+    private List<String> productNames = new ArrayList<>();
 
     //      Et eller annet problem her som jeg tror påvirker testen:
     public HttpServer(int port) throws IOException {
@@ -25,7 +29,9 @@ public class HttpServer {
             }
         }).start();
 
-     /*   while (true) {
+     /* Med denne koden så loader alle testene, uten så failer de...?
+       
+       while (true) {
 
                 Socket clientSocket = serverSocket.accept();
             }
@@ -90,4 +96,9 @@ public class HttpServer {
     public void setContentRoot(File contentRoot) {
         this.contentRoot = contentRoot;
     }
+
+    public List<String> getProductNames() {
+        return productNames;
+    }
+    
 }

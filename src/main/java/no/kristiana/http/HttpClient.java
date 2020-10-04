@@ -12,13 +12,24 @@ public class HttpClient {
     private String responseBody;
 
     public HttpClient(final String hostname, int port, final String requestTarget) throws IOException {
+        this(hostname, port, requestTarget, "GET", null);
+    }
+
+    public HttpClient(final String hostname, int port, final String requestTarget, final String httpMethod, String responseBody) throws IOException {
         Socket socket = new Socket(hostname, port);
 
-        String request = "GET " + requestTarget + " HTTP/1.1\r\n" +
+        String contentLengthHeader = responseBody != null ? "Content-Length: " + responseBody.length() + "\r\n" : "";
+
+        String request = httpMethod + " " + requestTarget + " HTTP/1.1\r\n" +
                 "Host: " + hostname + "\r\n" +
+                contentLengthHeader +
                 "\r\n";
 
         socket.getOutputStream().write(request.getBytes());
+
+        if(responseBody != null) {
+            socket.getOutputStream().write(responseBody.getBytes());
+        }
 
         String responseLine = readLine(socket);
         String[] responseLineParts = responseLine.split(" ");
