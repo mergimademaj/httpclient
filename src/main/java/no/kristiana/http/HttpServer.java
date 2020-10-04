@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class HttpServer {
@@ -65,14 +64,12 @@ public class HttpServer {
             File file = new File(contentRoot, requestPath);
             if(!file.exists()){
                 body = file + " dose not exist";
-                String response = "HTTP/1.1" + "404 Not Found\r\n" +
-                        "Content-Length: " + body.length() + "\r\n" +
-                        "\r\n" +
-                        body;
+
+                String response = "HTTP/1.1" + "404 not Found\r\n" + "Content-Length: " + body.length() + "\r\n" + body;
                 clientSocket.getOutputStream().write(response.getBytes());
                 return;
             }
-            statusCode = "200";
+           //Er litt usikkerp å om jeg trenger denne.. statusCode = "200";
             String contentType = "text/plain";
             if(file.getName().endsWith(".html")){
                 contentType = "text/html";

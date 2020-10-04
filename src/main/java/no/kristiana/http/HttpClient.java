@@ -12,7 +12,7 @@ public class HttpClient {
     private String responseBody;
 
     public HttpClient(final String hostname, int port, final String requestTarget) throws IOException {
-        this(hostname, port, requestTarget, "GET", null);
+        this(hostname, port, requestTarget, "GET", "null");
     }
 
     public HttpClient(final String hostname, int port, final String requestTarget, final String httpMethod, String responseBody) throws IOException {
@@ -20,10 +20,7 @@ public class HttpClient {
 
         String contentLengthHeader = responseBody != null ? "Content-Length: " + responseBody.length() + "\r\n" : "";
 
-        String request = httpMethod + " " + requestTarget + " HTTP/1.1\r\n" +
-                "Host: " + hostname + "\r\n" +
-                contentLengthHeader +
-                "\r\n";
+        String request = httpMethod + " " + requestTarget + " HTTP/1.1\r\n" + "Host: " + hostname + "\r\n" + contentLengthHeader + "\r\n";
 
         socket.getOutputStream().write(request.getBytes());
 
@@ -66,7 +63,7 @@ public class HttpClient {
     }
 
     public static void main(String [] args) throws IOException {
-        HttpClient client = new HttpClient("urlecho.appspot.com", 80, "/echo?status=404&Content-Type=text%2Fhtml&body=Hei+Kristiana");
+        HttpClient client = new HttpClient("urlecho.appspot.com", 80, "/echo?status=404&Content-Type=text%2Fhtml&body=Hei+Kristiania");
         System.out.println(client.getResponseBody());
     }
 
