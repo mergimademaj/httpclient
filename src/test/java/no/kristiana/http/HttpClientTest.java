@@ -6,15 +6,16 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class HttpClientTest {
+class HttpClientTest {
 
     @Test
     void shouldShowSuccessfulStatusCode() throws IOException {
         HttpClient client = new HttpClient("urlecho.appspot.com", 80, "/echo");
         assertEquals(200, client.getStatusCode());
     }
+
     @Test
-    void shouldShowUnSuccessfulStatusCode() throws IOException {
+    void shouldShowUnsuccessfulStatusCode() throws IOException {
         HttpClient client = new HttpClient("urlecho.appspot.com", 80, "/echo?status=404");
         assertEquals(404, client.getStatusCode());
     }
@@ -30,5 +31,4 @@ public class HttpClientTest {
         HttpClient client = new HttpClient("urlecho.appspot.com", 80, "/echo?body=Kristiania");
         assertEquals("Kristiania", client.getResponseBody());
     }
-
 }

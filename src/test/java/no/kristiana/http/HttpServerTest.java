@@ -15,28 +15,28 @@ class HttpServerTest {
     @Test
     void shouldReturnSuccessfulStatusCode() throws IOException {
         HttpServer server = new HttpServer(10001);
-        HttpClient client = new HttpClient("localhost", 10001, "/echo");
+        HttpClient client = new HttpClient("localhost", 10001, "/echo", "urlecho.appspot.com", 80, "/echo?status=200&Content-Type=text%2Fplain&body=Hei%20Kristiania");
         assertEquals(200, client.getStatusCode());
     }
 
     @Test
     void shouldReturnUnsuccessfulStatusCode() throws IOException {
         HttpServer server = new HttpServer(10002);
-        HttpClient client = new HttpClient("localhost", 10002, "/echo?status=404");
+        HttpClient client = new HttpClient("localhost", 10002, "/echo?status=404", "urlecho.appspot.com", 80, "/echo?status=200&Content-Type=text%2Fplain&body=Hei%20Kristiania");
         assertEquals(404, client.getStatusCode());
     }
 
     @Test
     void shouldReturnContentLength() throws IOException {
         HttpServer server = new HttpServer(10003);
-        HttpClient client = new HttpClient("localhost", 10003, "/echo?body=HelloWorld");
+        HttpClient client = new HttpClient("localhost", 10003, "/echo?body=HelloWorld", "urlecho.appspot.com", 80, "/echo?status=200&Content-Type=text%2Fplain&body=Hei%20Kristiania");
         assertEquals("10", client.getResponseHeader("Content-Length"));
     }
 
     @Test
     void shouldReturnResponseBody() throws IOException {
         HttpServer server = new HttpServer(10004);
-        HttpClient client = new HttpClient("localhost", 10004, "/echo?body=HelloWorld");
+        HttpClient client = new HttpClient("localhost", 10004, "/echo?body=HelloWorld", "urlecho.appspot.com", 80, "/echo?status=200&Content-Type=text%2Fplain&body=Hei%20Kristiania");
         assertEquals("HelloWorld", client.getResponseBody());
     }
 
@@ -49,7 +49,7 @@ class HttpServerTest {
         String fileContent = "Hello World" + new Date();
         Files.writeString(new File(contentRoot, "test.txt").toPath(), fileContent);
 
-        HttpClient client = new HttpClient("localhost", 10005, "/echo?body=HelloWorld");
+        HttpClient client = new HttpClient("localhost", 10005, "/echo?body=HelloWorld", "urlecho.appspot.com", 80, "/echo?status=200&Content-Type=text%2Fplain&body=Hei%20Kristiania");
         assertEquals("fileContent", client.getResponseBody());
         assertEquals("text/plain", client.getResponseHeader("Content-Type"));
     }
@@ -62,7 +62,7 @@ class HttpServerTest {
 
         Files.writeString(new File(contentRoot, "index.html").toPath(), "<h2>Hello World</h2>");
 
-        HttpClient client = new HttpClient("localhost", 10006, "/index.html");
+        HttpClient client = new HttpClient("localhost", 10006, "/index.html", "urlecho.appspot.com", 80, "/echo?status=200&Content-Type=text%2Fplain&body=Hei%20Kristiania");
         assertEquals("text/html", client.getResponseHeader("Content-Type"));
 
 
@@ -74,14 +74,14 @@ class HttpServerTest {
         File contentRoot = new File("target/");
         server.setContentRoot(contentRoot);
 
-        HttpClient client = new HttpClient("localhost", 10007, "/notFound.txt");
+        HttpClient client = new HttpClient("localhost", 10007, "/notFound.txt", "urlecho.appspot.com", 80, "/echo?status=200&Content-Type=text%2Fplain&body=Hei%20Kristiania");
         assertEquals(404, client.getStatusCode());
     }
 
     @Test
     void shouldPostNewProduct() throws IOException {
         HttpServer server = new HttpServer(10008);
-        HttpClient client = new HttpClient("localhost", 10008, "/api/newProduct", "POST", "productName=apples&price=10");
+        HttpClient client = new HttpClient("localhost", 10008, "/api/newProduct", "POST", "productName=apples&price=10", "urlecho.appspot.com", 80, "/echo?status=200&Content-Type=text%2Fplain&body=Hei%20Kristiania");
         assertEquals(200, client.getStatusCode());
         assertEquals(List.of("apples"), server.getProductNames());
     }
