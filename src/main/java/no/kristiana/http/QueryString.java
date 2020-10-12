@@ -1,4 +1,4 @@
-package no.kristiana.http;
+ package no.kristiana.http;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -37,3 +37,5 @@ public class QueryString {
         parameters.put(key, value);
     }
 }
+
+

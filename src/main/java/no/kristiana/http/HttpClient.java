@@ -20,7 +20,8 @@ public class HttpClient {
 
         socket.getOutputStream().write(request.getBytes());
 
-        String[] responseLineParts = readLine(socket).split("  ");
+
+        String[] responseLineParts = readLine(socket).split("");
 
         statusCode = Integer.parseInt(responseLineParts[1]);
 
@@ -28,8 +29,8 @@ public class HttpClient {
         while (!(headerLine = readLine(socket)).isEmpty()) {
             int colonPos = headerLine.indexOf(':');
             String headerName = headerLine.substring(0, colonPos);
-            String headValue = headerLine.substring(colonPos+1).trim();
-            responseHeaders.put(headerName,headValue);
+            String headerValue = headerLine.substring(colonPos+1).trim();
+            responseHeaders.put(headerName,headerValue);
         }
 
         int contentLength = Integer.parseInt(getResponseHeader("Content-Length"));
@@ -41,7 +42,7 @@ public class HttpClient {
 
     }
 
-    private String readLine(Socket socket) throws IOException {
+    public static String readLine(Socket socket) throws IOException {
         StringBuilder line = new StringBuilder();
         int c;
         while ((c = socket.getInputStream().read()) != -1) {
